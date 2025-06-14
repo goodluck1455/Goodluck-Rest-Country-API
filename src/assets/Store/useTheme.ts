@@ -6,6 +6,8 @@ interface ThemeStore {
   theme: 'light' | 'dark'
   toggleTheme: () => void
   setTheme: (theme: 'light' | 'dark') => void
+  hasHydrated: boolean
+  setHasHydrated: (state: boolean) => void
 }
 
 export const useThemeStore = create<ThemeStore>()(
@@ -19,9 +21,15 @@ export const useThemeStore = create<ThemeStore>()(
         }),
 
       setTheme: (theme) => set({ theme }),
+        hasHydrated: false,
+      setHasHydrated: (state) => set({ hasHydrated: state }),
+
     }),
     {
-      name: "theme-store", // localStorage key
+      name: "theme-store",
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true)
+      } // localStorage key
     }
   )
 );

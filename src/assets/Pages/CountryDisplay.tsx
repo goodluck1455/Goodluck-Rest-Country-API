@@ -1,6 +1,6 @@
 // import React from 'react'
 // import Select from "react-select";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCountryStore } from "../Store/useCountry";
 import { Link } from "react-router-dom";
 // import { MdDarkMode } from "react-icons/md";
@@ -21,18 +21,31 @@ export default function CountryDisplay() {
 
   const {fetchCountries, countries,   searchQuery, setSearchQuery, filteredCountries, selectedRegion} = useCountryStore();
   const setSelectedCountry = useCountryStore((state) => state.setSelectedCountry);
-     const {theme} = useThemeStore();
+     const {theme, hasHydrated} = useThemeStore();
+     const [isLoading, setIsLoading] = useState(false); 
 
 const handleClick = (selectedCountry: Country) => {
   setSelectedCountry(selectedCountry);
 };
 
 
- const Text = theme === "dark" ? " text-[#ffffff]" : "text-[#2b3945]";
+ const Text = theme === "dark" ? "text-[#ffffff]" : "text-[#2b3945]";
+const Background = theme === "dark" ? "bg-[#2b3945] ": "bg-[#ffffff]"
+const SpinBorder = theme === "dark" ? "border-[#ffffff]" : "border-[#2b3945]"
 
- useEffect(() => {
-    fetchCountries();
+const InputPlaceHolder =  theme === "dark" ? "placeholder-white" : "placeholder-[#2b3945]"
+
+useEffect(() => {
+    const loadData = async () => {
+      await fetchCountries();
+      setTimeout(() => setIsLoading(true), 300); // slight delay for smooth transition
+    };
+    loadData();
   }, [fetchCountries]);
+  
+//  useEffect(() => {
+//     fetchCountries();
+//   }, [fetchCountries]);
 
 const filtered = filteredCountries();
 
@@ -44,7 +57,15 @@ const filtered = filteredCountries();
       c.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+const isAppReady = hasHydrated && isLoading;
 
+if (!isAppReady) {
+    return (
+      <div className={`flex items-center justify-center h-screen ${Background}`}>
+        <div className={`w-20 h-20 border-4 ${SpinBorder} border-t-transparent rounded-full animate-spin`}></div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -56,7 +77,7 @@ const filtered = filteredCountries();
             <input
               type="text"
               placeholder="Search for a country..."
-              className={`bg-transparent outline-none w-full 2xl:h-full ${Text}`}
+              className={`bg-transparent outline-none w-full 2xl:h-full ${Text} ${InputPlaceHolder}`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
