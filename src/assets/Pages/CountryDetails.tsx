@@ -1,6 +1,6 @@
 // import  {useRef, useState, useEffect} from 'react'
 // import { IoMdArrowBack } from "react-icons/io";
-import { useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { MdOutlineKeyboardBackspace as Backarrow } from "react-icons/md";
 import { useCountryStore } from "../Store/useCountry";
@@ -11,6 +11,10 @@ export default function CountryDetails() {
   const { countries,  fetchCountries,  } = useCountryStore();
   const {theme} = useThemeStore()
 const { countryName } = useParams(); 
+
+ const handleClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
 
     const Text = theme === "dark" ? " text-[#ffffff]" : "text-[#2b3945]";
@@ -139,7 +143,7 @@ useEffect(() => {
                   const borderCountry = countries.find(c => c.alpha3Code === code);
 
                     return (
-                      <Link to={`/country/${borderCountry?.name || code}`}   key={index} className="mt-5 max-sm:mt-0">
+                      <Link to={`/country/${borderCountry?.name || code}`}   key={index} className="mt-5 max-sm:mt-0" onClick={handleClick}>
                       <span
                       
                         className={`${Backarrow} ${Text}  opacity-75 py-2 px-5 shadow-md cursor-pointer rounded-[5px]`}
