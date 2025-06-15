@@ -10,6 +10,8 @@ import type { Country } from "../Store/useCountry";
 import SelectForm from "../Components/SelectForm";
 import { IoMdClose } from "react-icons/io";
 import { useThemeStore } from "../Store/useTheme";
+import { motion } from "framer-motion";
+import {fadeIn} from "../Components/Animation"
 
 // interface Props {
 //   country?: Country; // Optional if passed down, not used directly
@@ -130,7 +132,13 @@ if (!isAppReady) {
         return (
             <>
             <Link to={`/country/${data.name}`} onClick={()=>handleClick(data)} key={data.name}>
-              <div
+              
+              <motion.div 
+           variants={fadeIn("up", 0.3, "scale")}
+         initial="hidden"
+         whileInView={"show"}
+         
+
             className={` ${theme === "dark" ? "bg-[#2b3945] ": "bg-[#ffffff]"}   w-[17rem] h-[24rem]   box-shawdow  mb-10 cursor-pointer rounded-[10px]
             md:w-[20rem] lg:w-[17rem]`}
             
@@ -171,7 +179,7 @@ if (!isAppReady) {
                 <span className={`${Text} opacity-75 ml-2`}>{data.capital}</span>
               </p>
             </div>
-          </div>
+          </motion.div>
           </Link>
           </>
         );
